@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "清华大学",
+    "description": "人工智能研究合作伙伴",
+    "logo": null,
+    "website": "https://www.tsinghua.edu.cn"
+  },
+  {
+    "id": 2,
+    "name": "北京大学",
+    "description": "机器学习联合实验室",
+    "logo": null,
+    "website": "https://www.pku.edu.cn"
+  },
+  {
+    "id": 3,
+    "name": "中科院",
+    "description": "深度学习技术研发",
+    "logo": null,
+    "website": "https://www.cas.cn"
+  },
+  {
+    "id": 4,
+    "name": "华为技术",
+    "description": "AI芯片与算法优化",
+    "logo": null,
+    "website": "https://www.huawei.com"
+  },
+  {
+    "id": 5,
+    "name": "腾讯AI Lab",
+    "description": "自然语言处理技术合作",
+    "logo": null,
+    "website": "https://ai.tencent.com"
+  }
+]

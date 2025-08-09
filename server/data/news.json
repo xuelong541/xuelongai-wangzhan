@@ -1,0 +1,56 @@
+{
+  "news": [
+    {
+      "id": 1,
+      "content": "雪珑AI荣获2024年度最佳AI设计工作室奖",
+      "icon": "🎉",
+      "type": "award",
+      "priority": 1,
+      "isActive": true,
+      "createdAt": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "content": "新推出智能UI设计助手，提升设计效率300%",
+      "icon": "🚀",
+      "type": "product",
+      "priority": 2,
+      "isActive": true,
+      "createdAt": "2024-01-10T14:30:00Z"
+    },
+    {
+      "id": 3,
+      "content": "与知名企业达成战略合作，共建AI设计生态",
+      "icon": "💡",
+      "type": "partnership",
+      "priority": 3,
+      "isActive": true,
+      "createdAt": "2024-01-08T09:15:00Z"
+    },
+    {
+      "id": 4,
+      "content": "AI培训课程火热报名中，限时优惠50%",
+      "icon": "🔥",
+      "type": "promotion",
+      "priority": 4,
+      "isActive": true,
+      "createdAt": "2024-01-05T16:45:00Z"
+    },
+    {
+      "id": 5,
+      "content": "客户满意度达98%，服务质量行业领先",
+      "icon": "⭐",
+      "type": "achievement",
+      "priority": 5,
+      "isActive": true,
+      "createdAt": "2024-01-01T12:00:00Z"
+    }
+  ],
+  "settings": {
+    "scrollSpeed": 30,
+    "maxDisplayItems": 5,
+    "autoRefresh": true,
+    "refreshInterval": 30,
+    "animationDelay": 0.1
+  }
+}

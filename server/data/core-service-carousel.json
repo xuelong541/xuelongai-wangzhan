@@ -1,0 +1,39 @@
+{
+  "id": 1,
+  "title": "核心服务轮播图片",
+  "images": [
+    {
+      "id": 1753807351545.3977,
+      "url": "/uploads/images-1753807351467-892380366.jpg",
+      "filename": "images-1753807351467-892380366.jpg",
+      "originalName": "1195663467932024832.jpg",
+      "uploadedAt": "2025-07-29T16:42:31.545Z"
+    },
+    {
+      "id": 1753807351545.8867,
+      "url": "/uploads/images-1753807351480-300177470.png",
+      "filename": "images-1753807351480-300177470.png",
+      "originalName": "1195663467932024832.png",
+      "uploadedAt": "2025-07-29T16:42:31.545Z"
+    },
+    {
+      "id": 1753807351545.8474,
+      "url": "/uploads/images-1753807351503-330168722.png",
+      "filename": "images-1753807351503-330168722.png",
+      "originalName": "1195892265571057664.png",
+      "uploadedAt": "2025-07-29T16:42:31.545Z"
+    },
+    {
+      "id": 1753807351545.0044,
+      "url": "/uploads/images-1753807351517-772516354.png",
+      "filename": "images-1753807351517-772516354.png",
+      "originalName": "1208244182653599744.png",
+      "uploadedAt": "2025-07-29T16:42:31.545Z"
+    }
+  ],
+  "isActive": true,
+  "autoPlay": true,
+  "interval": 3000,
+  "createdAt": "2025-01-29T00:00:00.000Z",
+  "updatedAt": "2025-08-07T15:08:11.816Z"
+}

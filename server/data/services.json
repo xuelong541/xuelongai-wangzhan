@@ -1,0 +1,54 @@
+[
+  {
+    "id": 1,
+    "title": "专业AI培训",
+    "templateType": "vertical",
+    "posterImage": null,
+    "posterImages": [
+      "/uploads/posters-1753807394326-830672875.jpg",
+      "/uploads/posters-1753807394329-815738655.jpg"
+    ],
+    "isActive": true,
+    "order": 1,
+    "createdAt": "2025-07-28T15:26:58.572Z",
+    "updatedAt": "2025-07-29T16:43:14.347Z"
+  },
+  {
+    "id": 2,
+    "title": "定制项目开发",
+    "templateType": "horizontal",
+    "posterImage": null,
+    "posterImages": [
+      "/uploads/posters-1753807439103-414580873.png",
+      "/uploads/posters-1753807439112-937356512.jpg",
+      "/uploads/posters-1753807439122-475355504.jpg",
+      "/uploads/posters-1753807439130-890540416.jpg",
+      "/uploads/posters-1753807439136-978486344.png",
+      "/uploads/posters-1753807439145-921963806.png",
+      "/uploads/posters-1753807439157-339451462.png",
+      "/uploads/posters-1753807439166-68785986.png"
+    ],
+    "isActive": true,
+    "order": 1,
+    "createdAt": "2025-07-28T15:26:58.572Z",
+    "updatedAt": "2025-07-29T16:43:59.197Z"
+  },
+  {
+    "id": 3,
+    "title": "校企合作",
+    "templateType": "grid",
+    "posterImage": null,
+    "posterImages": [
+      "/uploads/posters-1753758034781-157257878.png",
+      "/uploads/posters-1753758034782-567675488.jpg",
+      "/uploads/posters-1753758034789-939749394.jpg",
+      "/uploads/posters-1753758035312-565264933.jpg",
+      "/uploads/posters-1753758035312-357270030.png",
+      "/uploads/posters-1753758035312-188169597.png"
+    ],
+    "isActive": true,
+    "order": 1,
+    "createdAt": "2025-07-28T15:26:58.572Z",
+    "updatedAt": "2025-07-29T03:00:35.324Z"
+  }
+]

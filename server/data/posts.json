@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "XUELONG AI 深度学习框架发布",
+    "content": "我们很高兴地宣布XUELONG AI深度学习框架正式发布，为开发者提供更强大的AI开发工具。",
+    "author": "XUELONG AI团队",
+    "createdAt": "2024-01-15T00:00:00.000Z",
+    "image": null,
+    "published": true
+  },
+  {
+    "id": 2,
+    "title": "人工智能在医疗领域的突破性应用",
+    "content": "XUELONG AI在医疗影像识别方面取得重大突破，准确率达到99.5%，为医疗诊断提供强有力支持。",
+    "author": "研发部",
+    "createdAt": "2024-01-10T00:00:00.000Z",
+    "image": null,
+    "published": true
+  },
+  {
+    "id": 3,
+    "title": "智能语音助手技术升级",
+    "content": "最新版本的智能语音助手支持多语言识别和自然语言处理，用户体验显著提升。",
+    "author": "产品团队",
+    "createdAt": "2024-01-05T00:00:00.000Z",
+    "image": null,
+    "published": true
+  }
+]

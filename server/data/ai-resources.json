@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "name": "ChatGPT",
+    "description": "智能对话助手，支持多轮对话和代码生成",
+    "category": "对话AI",
+    "url": "https://chat.openai.com",
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "name": "Claude",
+    "description": "高质量文本分析和创作工具",
+    "category": "文本AI",
+    "url": "https://claude.ai",
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 3,
+    "name": "Midjourney",
+    "description": "专业AI图像生成和艺术创作平台",
+    "category": "图像AI",
+    "url": "https://midjourney.com",
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 4,
+    "name": "GitHub Copilot",
+    "description": "智能代码补全和编程助手",
+    "category": "编程AI",
+    "url": "https://github.com/features/copilot",
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 5,
+    "name": "TensorFlow",
+    "description": "开源机器学习框架和模型训练",
+    "category": "开发框架",
+    "url": "https://tensorflow.org",
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 6,
+    "name": "PyTorch",
+    "description": "深度学习研究和生产部署平台",
+    "category": "开发框架",
+    "url": "https://pytorch.org",
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  }
+]
