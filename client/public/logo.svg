@@ -1,0 +1,167 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- 渐变和效果定义 -->
+  <defs>
+    <!-- 星辰发光渐变 -->
+    <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#60a5fa;stop-opacity:0.9" />
+      <stop offset="70%" style="stop-color:#3b82f6;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:0.2" />
+    </radialGradient>
+    
+    <!-- 连接线渐变 -->
+    <linearGradient id="connectionLine1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0.8" />
+    </linearGradient>
+    
+    <linearGradient id="connectionLine2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:0.8" />
+    </linearGradient>
+    
+    <!-- 中心星辰渐变 -->
+    <radialGradient id="centerStar" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="40%" style="stop-color:#dbeafe;stop-opacity:0.95" />
+      <stop offset="80%" style="stop-color:#60a5fa;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0.6" />
+    </radialGradient>
+    
+    <!-- 角落星辰渐变 -->
+    <radialGradient id="cornerStar1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#60a5fa;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0.7" />
+    </radialGradient>
+    
+    <radialGradient id="cornerStar2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#93c5fd;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:0.7" />
+    </radialGradient>
+    
+    <radialGradient id="cornerStar3" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#dbeafe;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#93c5fd;stop-opacity:0.7" />
+    </radialGradient>
+    
+    <radialGradient id="cornerStar4" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#bfdbfe;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#dbeafe;stop-opacity:0.7" />
+    </radialGradient>
+    
+    <!-- 发光效果滤镜 -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/> 
+      </feMerge>
+    </filter>
+    
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/> 
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- 背景发光晕圈 -->
+  <circle cx="50" cy="50" r="45" fill="none" stroke="url(#starGlow)" stroke-width="0.5" opacity="0.3" />
+  <circle cx="50" cy="50" r="35" fill="none" stroke="url(#starGlow)" stroke-width="0.3" opacity="0.2" />
+  
+  <!-- X形连接线 -->
+  <!-- 左上到右下 -->
+  <line x1="20" y1="20" x2="80" y2="80" 
+        stroke="url(#connectionLine1)" 
+        stroke-width="1" 
+        opacity="0.8" 
+        filter="url(#softGlow)" />
+  
+  <!-- 右上到左下 -->
+  <line x1="80" y1="20" x2="20" y2="80" 
+        stroke="url(#connectionLine2)" 
+        stroke-width="1" 
+        opacity="0.8" 
+        filter="url(#softGlow)" />
+  
+  <!-- 四角星辰 -->
+  <!-- 左上角星辰 -->
+  <g transform="translate(20,20)">
+    <circle r="8" fill="url(#starGlow)" opacity="0.2" />
+    <circle r="4" fill="url(#starGlow)" opacity="0.4" />
+    <path d="M 0 -6 L 1.5 -1.5 L 6 0 L 1.5 1.5 L 0 6 L -1.5 1.5 L -6 0 L -1.5 -1.5 Z" 
+          fill="url(#cornerStar1)" 
+          filter="url(#glow)" />
+    <circle r="1.5" fill="#ffffff" opacity="0.9" />
+  </g>
+  
+  <!-- 右上角星辰 -->
+  <g transform="translate(80,20)">
+    <circle r="8" fill="url(#starGlow)" opacity="0.2" />
+    <circle r="4" fill="url(#starGlow)" opacity="0.4" />
+    <path d="M 0 -6 L 1.5 -1.5 L 6 0 L 1.5 1.5 L 0 6 L -1.5 1.5 L -6 0 L -1.5 -1.5 Z" 
+          fill="url(#cornerStar2)" 
+          filter="url(#glow)" />
+    <circle r="1.5" fill="#ffffff" opacity="0.9" />
+  </g>
+  
+  <!-- 左下角星辰 -->
+  <g transform="translate(20,80)">
+    <circle r="8" fill="url(#starGlow)" opacity="0.2" />
+    <circle r="4" fill="url(#starGlow)" opacity="0.4" />
+    <path d="M 0 -6 L 1.5 -1.5 L 6 0 L 1.5 1.5 L 0 6 L -1.5 1.5 L -6 0 L -1.5 -1.5 Z" 
+          fill="url(#cornerStar3)" 
+          filter="url(#glow)" />
+    <circle r="1.5" fill="#ffffff" opacity="0.9" />
+  </g>
+  
+  <!-- 右下角星辰 -->
+  <g transform="translate(80,80)">
+    <circle r="8" fill="url(#starGlow)" opacity="0.2" />
+    <circle r="4" fill="url(#starGlow)" opacity="0.4" />
+    <path d="M 0 -6 L 1.5 -1.5 L 6 0 L 1.5 1.5 L 0 6 L -1.5 1.5 L -6 0 L -1.5 -1.5 Z" 
+          fill="url(#cornerStar4)" 
+          filter="url(#glow)" />
+    <circle r="1.5" fill="#ffffff" opacity="0.9" />
+  </g>
+  
+  <!-- 中心主星辰 -->
+  <g transform="translate(50,50)">
+    <circle r="12" fill="url(#starGlow)" opacity="0.15" />
+    <circle r="8" fill="url(#starGlow)" opacity="0.3" />
+    <circle r="5" fill="url(#starGlow)" opacity="0.5" />
+    <path d="M 0 -8 L 2 -2 L 8 0 L 2 2 L 0 8 L -2 2 L -8 0 L -2 -2 Z" 
+          fill="url(#centerStar)" 
+          filter="url(#glow)" />
+    <circle r="2" fill="#ffffff" opacity="0.95" />
+    <circle r="0.8" fill="#ffffff" />
+  </g>
+  
+  <!-- 装饰性小星点 -->
+  <circle cx="35" cy="15" r="1" fill="url(#cornerStar1)" opacity="0.7" filter="url(#softGlow)" />
+  <circle cx="65" cy="15" r="0.8" fill="url(#cornerStar2)" opacity="0.6" filter="url(#softGlow)" />
+  <circle cx="85" cy="35" r="1" fill="url(#cornerStar3)" opacity="0.7" filter="url(#softGlow)" />
+  <circle cx="85" cy="65" r="0.8" fill="url(#cornerStar4)" opacity="0.6" filter="url(#softGlow)" />
+  <circle cx="65" cy="85" r="1" fill="url(#cornerStar1)" opacity="0.7" filter="url(#softGlow)" />
+  <circle cx="35" cy="85" r="0.8" fill="url(#cornerStar2)" opacity="0.6" filter="url(#softGlow)" />
+  <circle cx="15" cy="65" r="1" fill="url(#cornerStar3)" opacity="0.7" filter="url(#softGlow)" />
+  <circle cx="15" cy="35" r="0.8" fill="url(#cornerStar4)" opacity="0.6" filter="url(#softGlow)" />
+  
+  <!-- 微光粒子 -->
+  <circle cx="30" cy="30" r="0.5" fill="#ffffff" opacity="0.8" />
+  <circle cx="70" cy="30" r="0.4" fill="#ffffff" opacity="0.7" />
+  <circle cx="70" cy="70" r="0.5" fill="#ffffff" opacity="0.8" />
+  <circle cx="30" cy="70" r="0.4" fill="#ffffff" opacity="0.7" />
+  <circle cx="50" cy="25" r="0.3" fill="#ffffff" opacity="0.6" />
+  <circle cx="75" cy="50" r="0.3" fill="#ffffff" opacity="0.6" />
+  <circle cx="50" cy="75" r="0.3" fill="#ffffff" opacity="0.6" />
+  <circle cx="25" cy="50" r="0.3" fill="#ffffff" opacity="0.6" />
+</svg>

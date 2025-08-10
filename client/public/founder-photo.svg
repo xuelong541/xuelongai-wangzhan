@@ -1,0 +1,114 @@
+<svg width="200" height="280" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景渐变 -->
+  <defs>
+    <radialGradient id="bgGradient" cx="50%" cy="25%" r="70%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </radialGradient>
+    <linearGradient id="skinGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fdbcb4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f4a688;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="hairGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2c3e50;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#34495e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="suitGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a252f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2c3e50;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 背景矩形 -->
+  <rect x="5" y="5" width="190" height="270" rx="20" fill="url(#bgGradient)" stroke="#fff" stroke-width="3"/>
+  
+  <!-- 头部 -->
+  <ellipse cx="100" cy="70" rx="35" ry="40" fill="url(#skinGradient)"/>
+  
+  <!-- 头发 -->
+  <path d="M 65 55 Q 100 30 135 55 Q 130 40 100 35 Q 70 40 65 55 Z" fill="url(#hairGradient)"/>
+  <ellipse cx="100" cy="50" rx="32" ry="15" fill="url(#hairGradient)"/>
+  
+  <!-- 眼睛 -->
+  <ellipse cx="88" cy="65" rx="4" ry="6" fill="#fff"/>
+  <ellipse cx="112" cy="65" rx="4" ry="6" fill="#fff"/>
+  <circle cx="88" cy="66" r="2.5" fill="#2c3e50"/>
+  <circle cx="112" cy="66" r="2.5" fill="#2c3e50"/>
+  <circle cx="89" cy="65" r="1" fill="#fff"/>
+  <circle cx="113" cy="65" r="1" fill="#fff"/>
+  
+  <!-- 眉毛 -->
+  <path d="M 82 60 Q 88 58 94 60" stroke="#2c3e50" stroke-width="2" fill="none"/>
+  <path d="M 106 60 Q 112 58 118 60" stroke="#2c3e50" stroke-width="2" fill="none"/>
+  
+  <!-- 鼻子 -->
+  <path d="M 100 70 L 98 77 L 102 77 Z" fill="#e8a085"/>
+  
+  <!-- 嘴巴 -->
+  <path d="M 92 83 Q 100 88 108 83" stroke="#c0392b" stroke-width="2" fill="none"/>
+  
+  <!-- 脖子 -->
+  <rect x="90" y="105" width="20" height="15" fill="url(#skinGradient)"/>
+  
+  <!-- 西装外套 -->
+  <path d="M 50 120 L 65 115 L 80 120 L 100 125 L 120 120 L 135 115 L 150 120 L 150 270 L 50 270 Z" fill="url(#suitGradient)"/>
+  
+  <!-- 衬衫 -->
+  <path d="M 80 120 L 100 125 L 120 120 L 120 270 L 80 270 Z" fill="#ecf0f1"/>
+  
+  <!-- 领带 -->
+  <path d="M 92 125 L 100 130 L 108 125 L 105 270 L 95 270 Z" fill="#e74c3c"/>
+  <path d="M 95 140 L 105 140" stroke="#c0392b" stroke-width="1"/>
+  <path d="M 95 160 L 105 160" stroke="#c0392b" stroke-width="1"/>
+  <path d="M 95 180 L 105 180" stroke="#c0392b" stroke-width="1"/>
+  <path d="M 95 200 L 105 200" stroke="#c0392b" stroke-width="1"/>
+  <path d="M 95 220 L 105 220" stroke="#c0392b" stroke-width="1"/>
+  
+  <!-- 西装领子 -->
+  <path d="M 80 120 L 92 135 L 100 130 L 108 135 L 120 120 L 115 145 L 100 135 L 85 145 Z" fill="url(#suitGradient)"/>
+  
+  <!-- 手臂 -->
+  <ellipse cx="65" cy="180" rx="15" ry="50" fill="url(#suitGradient)"/>
+  <ellipse cx="135" cy="180" rx="15" ry="50" fill="url(#suitGradient)"/>
+  
+  <!-- 手 -->
+  <circle cx="65" cy="230" r="10" fill="url(#skinGradient)"/>
+  <circle cx="135" cy="230" r="10" fill="url(#skinGradient)"/>
+  
+  <!-- 科技元素 - 浮动粒子 -->
+  <circle cx="30" cy="50" r="3" fill="#00d4ff" opacity="0.7">
+    <animate attributeName="cy" values="50;40;50" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="170" cy="70" r="2" fill="#00ff88" opacity="0.6">
+    <animate attributeName="cx" values="170;180;170" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="40" cy="150" r="2.5" fill="#ff6b6b" opacity="0.8">
+    <animate attributeName="r" values="2.5;4;2.5" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="160" cy="200" r="2" fill="#ffd700" opacity="0.7">
+    <animate attributeName="cy" values="200;190;200" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- 连接线 -->
+  <path d="M 30 50 Q 60 30 100 35" stroke="#00d4ff" stroke-width="1" fill="none" opacity="0.5">
+    <animate attributeName="opacity" values="0.5;0.8;0.5" dur="2s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 170 70 Q 140 80 100 70" stroke="#00ff88" stroke-width="1" fill="none" opacity="0.4">
+    <animate attributeName="opacity" values="0.4;0.7;0.4" dur="3s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 40 150 Q 70 140 100 145" stroke="#ff6b6b" stroke-width="1" fill="none" opacity="0.3">
+    <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2.5s" repeatCount="indefinite"/>
+  </path>
+  
+  <!-- 专业徽章 -->
+  <circle cx="140" cy="160" r="15" fill="#3498db" stroke="#fff" stroke-width="2"/>
+  <text x="140" y="165" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">AI</text>
+  
+  <!-- 姓名牌 -->
+  <rect x="20" y="240" width="80" height="20" rx="10" fill="rgba(52, 73, 94, 0.9)"/>
+  <text x="60" y="253" text-anchor="middle" fill="#ecf0f1" font-size="10" font-weight="bold">技术总监</text>
+  
+  <!-- 装饰性元素 -->
+  <rect x="120" y="240" width="60" height="15" rx="7" fill="rgba(255, 255, 255, 0.1)"/>
+  <text x="150" y="250" text-anchor="middle" fill="#ecf0f1" font-size="8">INNOVATION</text>
+</svg>
