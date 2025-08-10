@@ -8,6 +8,11 @@
   /* 优化渲染性能 */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* 全局防止文字选择和换行优化 */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 *,
@@ -23,6 +28,11 @@ html {
   -ms-text-size-adjust: 100%;
   /* 平滑滚动 */
   scroll-behavior: smooth;
+  /* 全屏显示优化 */
+  width: 100%;
+  height: 100%;
+  /* 防止缩放 */
+  touch-action: manipulation;
 }
 
 body {
@@ -33,8 +43,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: linear-gradient(135deg, #1a1d29 0%, #2d3748 50%, #1a202c 100%);
   min-height: 100vh;
+  min-height: -webkit-fill-available;
   color: #e2e8f0;
   overflow-x: hidden;
+  /* 全屏显示优化 */
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  /* 防止移动端缩放和文本选择 */
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 /* XUELONG AI Navbar Styles */
@@ -48,6 +70,8 @@ body {
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(59, 130, 246, 0.1);
   transition: all 0.3s ease;
+  /* 确保导航栏全宽显示 */
+  width: 100vw;
 }
 
 .xuelong-navbar.scrolled {
@@ -111,6 +135,8 @@ body {
   background-clip: text;
   letter-spacing: -0.025em;
   transition: all 0.3s ease;
+  /* 防止品牌名称换行，允许完整显示 */
+  white-space: nowrap;
 }
 
 .navbar-brand:hover .brand-main {
@@ -164,6 +190,8 @@ body {
   border: none;
   cursor: pointer;
   font-size: 0.95rem;
+  /* 防止导航链接换行，允许完整显示 */
+  white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -519,10 +547,8 @@ code {
   -webkit-text-fill-color: transparent;
   margin-bottom: 0;
   line-height: 1.1;
-  /* 防止文本换行 */
+  /* 防止文本换行，允许完整显示 */
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   /* 确保在小屏幕上适当缩放而不是换行 */
   min-width: 0;
 }
@@ -538,10 +564,8 @@ code {
   font-size: 1.67rem;
   margin-top: 0.5rem;
   color: #94a3b8;
-  /* 防止文本换行 */
+  /* 防止文本换行，允许完整显示 */
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .hero-subtitle {
@@ -551,10 +575,8 @@ code {
   font-weight: 300;
   letter-spacing: 0.5px;
   margin-left: calc(4rem * 1.1 + 0.5rem);
-  /* 防止文本换行 */
+  /* 防止文本换行，允许完整显示 */
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .hero-buttons {
@@ -579,6 +601,8 @@ code {
   text-decoration: none;
   min-width: 120px;
   justify-content: center;
+  /* 防止按钮文字换行，允许完整显示 */
+  white-space: nowrap;
 }
 
 .btn-hero.primary {
@@ -629,6 +653,9 @@ code {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  /* 确保容器全宽适配 */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* 通用模块样式 */
@@ -645,6 +672,8 @@ code {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 1rem;
+  /* 防止标题换行，允许完整显示 */
+  white-space: nowrap;
 }
 
 .section-subtitle {
@@ -654,6 +683,8 @@ code {
   margin: 0;
   line-height: 1.6;
   text-align: left;
+  /* 防止副标题换行，允许完整显示 */
+  white-space: nowrap;
 }
 
 /* 关于雪珑AI */
@@ -1490,9 +1521,10 @@ code {
 
 .services-overview-image {
   width: 100%;
-  max-width: 500px;
+  max-width: 622px; /* 16:9比例，高度350px对应宽度622px */
   height: 100%;
   max-height: 350px;
+  aspect-ratio: 16/9; /* 强制16:9比例 */
   object-fit: contain;
   border-radius: 20px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -1516,9 +1548,10 @@ code {
 
 .carousel-image {
   width: 100%;
-  max-width: 500px;
+  max-width: 622px; /* 16:9比例，高度350px对应宽度622px */
   height: 100%;
   max-height: 350px;
+  aspect-ratio: 16/9; /* 强制16:9比例 */
   object-fit: cover;
   border-radius: 20px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
@@ -1708,26 +1741,20 @@ code {
   
   .main-title {
     font-size: 2.5rem;
-    /* 确保在小屏幕上也不换行 */
+    /* 确保在小屏幕上也不换行，允许完整显示 */
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   
   .title-accent {
     font-size: 1rem;
-    /* 防止副标题换行 */
+    /* 防止副标题换行，允许完整显示 */
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   
   .hero-subtitle {
     font-size: 1.1rem;
-    /* 防止副标题换行 */
+    /* 防止副标题换行，允许完整显示 */
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   
   .hero-buttons {
@@ -2424,18 +2451,14 @@ body {
   
   .main-title {
     font-size: 2rem;
-    /* 超小屏幕防换行 */
+    /* 超小屏幕防换行，允许完整显示 */
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   
   .title-accent {
     font-size: 1rem;
-    /* 防止副标题换行 */
+    /* 防止副标题换行，允许完整显示 */
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   
   .hero-subtitle {
@@ -2443,10 +2466,8 @@ body {
     margin-left: 0;
     text-align: center;
     margin-bottom: 2rem;
-    /* 防止副标题换行 */
+    /* 防止副标题换行，允许完整显示 */
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   
   .hero-buttons {
@@ -2511,19 +2532,15 @@ body {
   
   .main-title {
     font-size: 2.5rem;
-    /* 横屏模式防换行 */
+    /* 横屏模式防换行，允许完整显示 */
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   
   .hero-subtitle {
     font-size: 1.1rem;
     margin-bottom: 1.5rem;
-    /* 横屏模式防换行 */
+    /* 横屏模式防换行，允许完整显示 */
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   
   .logo-icon {
@@ -2579,6 +2596,115 @@ body {
     display: -webkit-box;
     -webkit-box-orient: horizontal;
     -webkit-box-align: center;
+  }
+}
+
+/* 跨浏览器全屏显示优化 */
+@media screen {
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    max-height: 100%;
+  }
+  
+  .App {
+    width: 100vw;
+    min-height: 100vh;
+    max-width: 100%;
+  }
+}
+
+/* 防止所有文本元素换行的通用规则 */
+h1, h2, h3, h4, h5, h6 {
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+/* 移动端特殊优化 */
+@media (max-width: 768px) {
+  * {
+    word-break: keep-all;
+    overflow-wrap: normal;
+  }
+  
+  h1, h2, h3, h4, h5, h6, .main-title, .section-title {
+    white-space: nowrap;
+    max-width: 100%;
+  }
+}
+
+/* 跨浏览器兼容性 - Chrome, Firefox, Safari, Edge */
+/* Chrome 和 Safari 特定优化 */
+@supports (-webkit-appearance: none) {
+  html, body {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  .main-title, .section-title, .brand-main {
+    -webkit-font-smoothing: antialiased;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* Chrome浏览器滚动字幕框优化 */
+  .news-ticker {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: transform;
+  }
+  
+  .news-ticker-content {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}
+
+/* Firefox 特定优化 */
+@-moz-document url-prefix() {
+  html, body {
+    -moz-text-size-adjust: 100%;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Edge 特定优化 */
+@supports (-ms-ime-align: auto) {
+  html, body {
+    -ms-text-size-adjust: 100%;
+    -ms-overflow-style: none;
+  }
+}
+
+/* 所有平台通用的全屏和防换行规则 */
+.xuelong-home, .App {
+  width: 100vw !important;
+  min-height: 100vh !important;
+  min-height: -webkit-fill-available !important;
+  overflow-x: hidden !important;
+}
+
+/* 确保所有重要文本元素不换行 */
+.main-title, .title-accent, .hero-subtitle, .section-title, .section-subtitle,
+.brand-main, .brand-accent, .nav-link, .btn-hero, .news-item {
+  white-space: nowrap !important;
+}
+
+/* 移动设备横屏优化 */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .hero-section {
+    min-height: 100vh !important;
+    min-height: -webkit-fill-available !important;
+  }
+  
+  .main-title {
+    font-size: 2rem !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem !important;
   }
 }
 
@@ -3388,6 +3514,23 @@ body {
   position: relative;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+  /* 与logo+文字宽度保持一致 */
+  width: 100%;
+  max-width: 800px;
+  /* Chrome浏览器兼容性优化 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* 确保滚动字幕框与logo区域宽度一致 */
+.hero-content .news-ticker {
+  width: 100%;
+  max-width: none;
+  /* Chrome浏览器特定优化 */
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
 }
 
 .news-ticker-wrapper {

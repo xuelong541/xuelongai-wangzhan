@@ -1,0 +1,67 @@
+services:
+  - type: web
+    name: xuelong-ai-backend
+    env: node
+    plan: free
+    region: oregon  # 选择最近的区域
+    buildCommand: |
+      npm install
+      npm run build || echo "No build script found"
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000  # Render默认端口
+      - key: MONGODB_URI
+        sync: false  # 需要在Render控制台手动设置
+      - key: JWT_SECRET
+        generateValue: true  # Render自动生成
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD_HASH
+        sync: false  # 需要在控制台设置
+      - key: ADMIN_EMAIL
+        value: admin@xuelongai.com
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: MAX_FILE_SIZE
+        value: "10485760"  # 10MB
+      - key: CORS_ORIGIN
+        value: "https://xuelong-ai-frontend.vercel.app,https://*.vercel.app"
+    
+    # 自动部署设置
+    autoDeploy: true
+    
+    # 健康检查设置
+    healthCheck:
+      path: /api/health
+      intervalSeconds: 30
+      timeoutSeconds: 10
+      unhealthyThresholdCount: 3
+      healthyThresholdCount: 2
+    
+    # 资源限制
+    disk:
+      name: data
+      mountPath: /tmp
+      sizeGB: 1
+    
+    # 预构建命令
+    preDeployCommand: |
+      echo "Starting pre-deploy..."
+      npm ci --only=production
+      echo "Pre-deploy completed"
+
+# 数据库服务（如果需要）
+# databases:
+#   - name: xuelong-ai-db
+#     databaseName: xuelongai
+#     user: dbuser
+#     plan: free
+#     region: oregon

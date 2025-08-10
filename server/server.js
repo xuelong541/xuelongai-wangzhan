@@ -3,6 +3,8 @@ const cors = require('cors');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
@@ -52,10 +54,99 @@ const saveData = (filePath, data) => {
   }
 };
 
+// Security headers middleware
+app.use((req, res, next) => {
+  // Prevent XSS attacks
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  
+  // Content Security Policy
+  res.setHeader('Content-Security-Policy', 
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline'; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data: https:; " +
+    "font-src 'self'; " +
+    "connect-src 'self';"
+  );
+  
+  // Hide server information
+  res.removeHeader('X-Powered-By');
+  
+  next();
+});
+
 // Middleware
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' })); // Add size limit
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// JWT Authentication middleware
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+  
+  if (!token) {
+    return res.status(401).json({ message: '访问令牌缺失' });
+  }
+  
+  const jwtSecret = process.env.JWT_SECRET || 'your-default-secret-key';
+  jwt.verify(token, jwtSecret, (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: '无效的访问令牌' });
+    }
+    req.user = user;
+    next();
+  });
+};
+
+// Optional authentication middleware (doesn't fail if no token)
+const optionalAuth = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  
+  if (token) {
+    const jwtSecret = process.env.JWT_SECRET || 'your-default-secret-key';
+    jwt.verify(token, jwtSecret, (err, user) => {
+      if (!err) {
+        req.user = user;
+      }
+    });
+  }
+  next();
+};
+
+// Rate limiting middleware
+const rateLimitStore = new Map();
+const rateLimit = (maxRequests = 10, windowMs = 15 * 60 * 1000) => {
+  return (req, res, next) => {
+    const clientIP = req.ip || req.connection.remoteAddress;
+    const now = Date.now();
+    const windowStart = now - windowMs;
+    
+    // Clean old entries
+    if (!rateLimitStore.has(clientIP)) {
+      rateLimitStore.set(clientIP, []);
+    }
+    
+    const requests = rateLimitStore.get(clientIP).filter(time => time > windowStart);
+    
+    if (requests.length >= maxRequests) {
+      return res.status(429).json({ 
+        message: '请求过于频繁，请稍后再试',
+        retryAfter: Math.ceil(windowMs / 1000)
+      });
+    }
+    
+    requests.push(now);
+    rateLimitStore.set(clientIP, requests);
+    next();
+  };
+};
+
+// Specific rate limit for login attempts
+const loginRateLimit = rateLimit(5, 15 * 60 * 1000); // 5 attempts per 15 minutes
 
 // Static file serving - serve uploads through API path for proper proxy handling
 app.use('/api/uploads', express.static(UPLOADS_DIR));
@@ -398,11 +489,12 @@ if (!fs.existsSync(PARTNERS_DATA_FILE)) {
 }
 
 // Sample user for authentication
+// Default password is 'password', hashed with bcrypt
 const sampleUser = {
   id: 1,
-  username: 'admin',
-  password: 'admin123', // In production, this should be hashed
-  email: 'admin@xuelongai.com'
+  username: process.env.ADMIN_USERNAME || 'admin',
+  password: process.env.ADMIN_PASSWORD_HASH || '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // 'password'
+  email: process.env.ADMIN_EMAIL || 'admin@xuelongai.com'
 };
 
 // Routes
@@ -425,7 +517,7 @@ app.get('/api/posts/:id', (req, res) => {
   res.json(post);
 });
 
-app.post('/api/posts', upload.single('image'), (req, res) => {
+app.post('/api/posts', authenticateToken, upload.single('image'), (req, res) => {
   const { title, content, author, published } = req.body;
   const newPost = {
     id: Math.max(...samplePosts.map(p => p.id), 0) + 1,
@@ -444,7 +536,7 @@ app.post('/api/posts', upload.single('image'), (req, res) => {
   res.status(201).json(newPost);
 });
 
-app.put('/api/posts/:id', upload.single('image'), (req, res) => {
+app.put('/api/posts/:id', authenticateToken, upload.single('image'), (req, res) => {
   const postIndex = samplePosts.findIndex(p => p.id === parseInt(req.params.id));
   if (postIndex === -1) {
     return res.status(404).json({ message: 'Post not found' });
@@ -473,7 +565,7 @@ app.put('/api/posts/:id', upload.single('image'), (req, res) => {
   res.json(samplePosts[postIndex]);
 });
 
-app.delete('/api/posts/:id', (req, res) => {
+app.delete('/api/posts/:id', authenticateToken, (req, res) => {
   const postIndex = samplePosts.findIndex(p => p.id === parseInt(req.params.id));
   if (postIndex === -1) {
     return res.status(404).json({ message: 'Post not found' });
@@ -492,7 +584,7 @@ app.get('/api/partners', (req, res) => {
   res.json(samplePartners);
 });
 
-app.post('/api/partners', (req, res) => {
+app.post('/api/partners', authenticateToken, (req, res) => {
   const { name, description, website } = req.body;
   const newPartner = {
     id: Math.max(...samplePartners.map(p => p.id), 0) + 1,
@@ -509,7 +601,7 @@ app.post('/api/partners', (req, res) => {
   res.status(201).json(newPartner);
 });
 
-app.put('/api/partners/:id', (req, res) => {
+app.put('/api/partners/:id', authenticateToken, (req, res) => {
   const partnerIndex = samplePartners.findIndex(p => p.id === parseInt(req.params.id));
   if (partnerIndex === -1) {
     return res.status(404).json({ message: 'Partner not found' });
@@ -530,7 +622,7 @@ app.put('/api/partners/:id', (req, res) => {
   res.json(samplePartners[partnerIndex]);
 });
 
-app.delete('/api/partners/:id', (req, res) => {
+app.delete('/api/partners/:id', authenticateToken, (req, res) => {
   const partnerIndex = samplePartners.findIndex(p => p.id === parseInt(req.params.id));
   if (partnerIndex === -1) {
     return res.status(404).json({ message: 'Partner not found' });
@@ -545,12 +637,37 @@ app.delete('/api/partners/:id', (req, res) => {
 });
 
 // Authentication routes
-app.post('/api/auth/login', (req, res) => {
-  const { username, password } = req.body;
-  
-  if (username === sampleUser.username && password === sampleUser.password) {
-    // In production, generate a proper JWT token
-    const token = 'sample-jwt-token';
+app.post('/api/auth/login', loginRateLimit, async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    
+    // Input validation
+    if (!username || !password) {
+      return res.status(400).json({ message: '用户名和密码不能为空' });
+    }
+    
+    // Check username
+    if (username !== sampleUser.username) {
+      return res.status(401).json({ message: '用户名或密码错误' });
+    }
+    
+    // Verify password using bcrypt
+    const isPasswordValid = await bcrypt.compare(password, sampleUser.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: '用户名或密码错误' });
+    }
+    
+    // Generate JWT token
+    const jwtSecret = process.env.JWT_SECRET || 'your-default-secret-key';
+    const token = jwt.sign(
+      { 
+        id: sampleUser.id, 
+        username: sampleUser.username 
+      },
+      jwtSecret,
+      { expiresIn: '24h' }
+    );
+    
     res.json({
       token,
       user: {
@@ -559,8 +676,9 @@ app.post('/api/auth/login', (req, res) => {
         email: sampleUser.email
       }
     });
-  } else {
-    res.status(401).json({ message: 'Invalid credentials' });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ message: '服务器内部错误' });
   }
 });
 
@@ -568,19 +686,57 @@ app.post('/api/auth/logout', (req, res) => {
   res.json({ message: 'Logged out successfully' });
 });
 
+// Input validation helper
+const validateInput = (input, maxLength = 1000) => {
+  if (typeof input !== 'string') return false;
+  if (input.length > maxLength) return false;
+  // Basic XSS prevention - remove script tags and dangerous patterns
+  const dangerousPatterns = /<script[^>]*>.*?<\/script>/gi;
+  return !dangerousPatterns.test(input);
+};
+
+const sanitizeInput = (input) => {
+  if (typeof input !== 'string') return input;
+  // Remove potentially dangerous HTML tags and scripts
+  return input
+    .replace(/<script[^>]*>.*?<\/script>/gi, '')
+    .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '')
+    .replace(/javascript:/gi, '')
+    .replace(/on\w+\s*=/gi, '')
+    .trim();
+};
+
 // Contact form
 app.post('/api/contact', (req, res) => {
   const { name, email, phone, service, message } = req.body;
   
-  // In production, you would save this to a database or send an email
-  console.log('Contact form submission:', {
-    name,
-    email,
-    phone,
-    service,
-    message,
+  // Input validation
+  if (!name || !email || !message) {
+    return res.status(400).json({ message: '姓名、邮箱和留言内容不能为空' });
+  }
+  
+  if (!validateInput(name, 100) || !validateInput(email, 100) || !validateInput(message, 2000)) {
+    return res.status(400).json({ message: '输入内容包含非法字符或超出长度限制' });
+  }
+  
+  // Email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: '邮箱格式不正确' });
+  }
+  
+  // Sanitize inputs
+  const sanitizedData = {
+    name: sanitizeInput(name),
+    email: sanitizeInput(email),
+    phone: phone ? sanitizeInput(phone) : '',
+    service: service ? sanitizeInput(service) : '',
+    message: sanitizeInput(message),
     timestamp: new Date()
-  });
+  };
+  
+  // In production, you would save this to a database or send an email
+  console.log('Contact form submission:', sanitizedData);
   
   res.json({ message: '感谢您的留言，我们会尽快与您联系！' });
 });
@@ -590,7 +746,7 @@ app.get('/api/company', (req, res) => {
   res.json(companyInfo);
 });
 
-app.put('/api/company', (req, res) => {
+app.put('/api/company', authenticateToken, (req, res) => {
   const { name, subtitle, slogan, description, address, phone, email } = req.body;
   Object.assign(companyInfo, {
     name: name || companyInfo.name,
@@ -611,7 +767,7 @@ app.get('/api/founder', (req, res) => {
   res.json(founderInfo);
 });
 
-app.put('/api/founder', upload.single('photo'), (req, res) => {
+app.put('/api/founder', authenticateToken, upload.single('photo'), (req, res) => {
   const { name, title, description, photo } = req.body;
   Object.assign(founderInfo, {
     name: name || founderInfo.name,
@@ -629,7 +785,7 @@ app.get('/api/company-intro', (req, res) => {
   res.json(companyIntro);
 });
 
-app.put('/api/company-intro', (req, res) => {
+app.put('/api/company-intro', authenticateToken, (req, res) => {
   const { paragraphs } = req.body;
   Object.assign(companyIntro, {
     paragraphs: paragraphs || companyIntro.paragraphs,
@@ -652,14 +808,31 @@ app.get('/api/ai-resources/:id', (req, res) => {
   res.json(resource);
 });
 
-app.post('/api/ai-resources', (req, res) => {
+app.post('/api/ai-resources', authenticateToken, (req, res) => {
   const { name, description, category, url, isActive } = req.body;
+  
+  // Input validation
+  if (!name || !description || !category || !url) {
+    return res.status(400).json({ message: '名称、描述、分类和URL不能为空' });
+  }
+  
+  if (!validateInput(name, 100) || !validateInput(description, 500) || !validateInput(category, 50)) {
+    return res.status(400).json({ message: '输入内容包含非法字符或超出长度限制' });
+  }
+  
+  // URL validation
+  try {
+    new URL(url);
+  } catch {
+    return res.status(400).json({ message: 'URL格式不正确' });
+  }
+  
   const newResource = {
     id: Math.max(...aiResources.map(r => r.id), 0) + 1,
-    name,
-    description,
-    category,
-    url,
+    name: sanitizeInput(name),
+    description: sanitizeInput(description),
+    category: sanitizeInput(category),
+    url: sanitizeInput(url),
     isActive: isActive !== undefined ? isActive : true,
     createdAt: new Date()
   };
@@ -671,7 +844,7 @@ app.post('/api/ai-resources', (req, res) => {
   res.status(201).json(newResource);
 });
 
-app.put('/api/ai-resources/:id', (req, res) => {
+app.put('/api/ai-resources/:id', authenticateToken, (req, res) => {
   const resourceIndex = aiResources.findIndex(r => r.id === parseInt(req.params.id));
   if (resourceIndex === -1) {
     return res.status(404).json({ message: 'AI Resource not found' });
@@ -694,7 +867,7 @@ app.put('/api/ai-resources/:id', (req, res) => {
   res.json(aiResources[resourceIndex]);
 });
 
-app.delete('/api/ai-resources/:id', (req, res) => {
+app.delete('/api/ai-resources/:id', authenticateToken, (req, res) => {
   const resourceIndex = aiResources.findIndex(r => r.id === parseInt(req.params.id));
   if (resourceIndex === -1) {
     return res.status(404).json({ message: 'AI Resource not found' });
@@ -721,7 +894,7 @@ app.get('/api/services/:id', (req, res) => {
   res.json(service);
 });
 
-app.post('/api/services', (req, res) => {
+app.post('/api/services', authenticateToken, (req, res) => {
   const { title, description, icon, features, isActive, order } = req.body;
   const newService = {
     id: coreServices.length + 1,
@@ -741,7 +914,7 @@ app.post('/api/services', (req, res) => {
   res.status(201).json(newService);
 });
 
-app.put('/api/services/:id', (req, res) => {
+app.put('/api/services/:id', authenticateToken, (req, res) => {
   const serviceIndex = coreServices.findIndex(s => s.id === parseInt(req.params.id));
   if (serviceIndex === -1) {
     return res.status(404).json({ message: 'Service not found' });
@@ -772,7 +945,7 @@ const posterUpload = multer({ storage: storage }).fields([
   { name: 'existingImages', maxCount: 1 }
 ]);
 
-app.post('/api/services/:id/poster', posterUpload, (req, res) => {
+app.post('/api/services/:id/poster', authenticateToken, posterUpload, (req, res) => {
   const serviceIndex = coreServices.findIndex(s => s.id === parseInt(req.params.id));
   if (serviceIndex === -1) {
     return res.status(404).json({ message: 'Service not found' });
@@ -829,7 +1002,7 @@ app.post('/api/services/:id/poster', posterUpload, (req, res) => {
   });
 });
 
-app.delete('/api/services/:id', (req, res) => {
+app.delete('/api/services/:id', authenticateToken, (req, res) => {
   const serviceIndex = coreServices.findIndex(s => s.id === parseInt(req.params.id));
   if (serviceIndex === -1) {
     return res.status(404).json({ message: 'Service not found' });
@@ -850,7 +1023,7 @@ app.get('/api/core-service-carousel', (req, res) => {
 });
 
 // Update core service carousel settings
-app.put('/api/core-service-carousel', (req, res) => {
+app.put('/api/core-service-carousel', authenticateToken, (req, res) => {
   const { title, isActive, autoPlay, interval } = req.body;
   
   coreServiceCarousel = {
@@ -869,7 +1042,7 @@ app.put('/api/core-service-carousel', (req, res) => {
 // Upload images for core service carousel
 const carouselUpload = multer({ storage: storage }).array('images', 10);
 
-app.post('/api/core-service-carousel/images', carouselUpload, (req, res) => {
+app.post('/api/core-service-carousel/images', authenticateToken, carouselUpload, (req, res) => {
   try {
     const uploadedImages = [];
     
@@ -904,7 +1077,7 @@ app.post('/api/core-service-carousel/images', carouselUpload, (req, res) => {
 });
 
 // Delete image from core service carousel
-app.delete('/api/core-service-carousel/images/:imageId', (req, res) => {
+app.delete('/api/core-service-carousel/images/:imageId', authenticateToken, (req, res) => {
   const imageId = req.params.imageId;
   
   const imageIndex = coreServiceCarousel.images.findIndex(img => img.id.toString() === imageId);
@@ -936,7 +1109,7 @@ app.delete('/api/core-service-carousel/images/:imageId', (req, res) => {
 });
 
 // Clear all images from core service carousel
-app.delete('/api/core-service-carousel/images', (req, res) => {
+app.delete('/api/core-service-carousel/images', authenticateToken, (req, res) => {
   // Try to delete all physical files
   coreServiceCarousel.images.forEach(image => {
     try {
@@ -993,18 +1166,31 @@ app.get('/api/news/:id', (req, res) => {
   }
 });
 
-app.post('/api/news', (req, res) => {
+app.post('/api/news', authenticateToken, (req, res) => {
   try {
     const { content, type, priority, isActive } = req.body;
     
+    // Input validation
     if (!content) {
-      return res.status(400).json({ message: 'Content is required' });
+      return res.status(400).json({ message: '新闻内容不能为空' });
+    }
+    
+    if (!validateInput(content, 1000)) {
+      return res.status(400).json({ message: '新闻内容包含非法字符或超出长度限制' });
+    }
+    
+    if (type && !['general', 'award', 'product', 'partnership', 'promotion', 'achievement'].includes(type)) {
+      return res.status(400).json({ message: '新闻类型不正确' });
+    }
+    
+    if (priority && (priority < 1 || priority > 10)) {
+      return res.status(400).json({ message: '优先级必须在1-10之间' });
     }
     
     const newId = Math.max(...newsData.news.map(item => item.id), 0) + 1;
     const newNewsItem = {
       id: newId,
-      content,
+      content: sanitizeInput(content),
       type: type || 'general',
       priority: priority || newsData.news.length + 1,
       isActive: isActive !== undefined ? isActive : true,
@@ -1017,11 +1203,11 @@ app.post('/api/news', (req, res) => {
     res.status(201).json(newNewsItem);
   } catch (error) {
     console.error('Error creating news item:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: '服务器内部错误' });
   }
 });
 
-app.put('/api/news/:id', (req, res) => {
+app.put('/api/news/:id', authenticateToken, (req, res) => {
   try {
     const newsId = parseInt(req.params.id);
     const { content, type, priority, isActive } = req.body;
@@ -1046,7 +1232,7 @@ app.put('/api/news/:id', (req, res) => {
   }
 });
 
-app.delete('/api/news/:id', (req, res) => {
+app.delete('/api/news/:id', authenticateToken, (req, res) => {
   try {
     const newsId = parseInt(req.params.id);
     const newsIndex = newsData.news.findIndex(item => item.id === newsId);
@@ -1065,7 +1251,7 @@ app.delete('/api/news/:id', (req, res) => {
   }
 });
 
-app.put('/api/news-settings', (req, res) => {
+app.put('/api/news-settings', authenticateToken, (req, res) => {
   try {
     const { scrollSpeed, maxDisplayItems, autoRefresh, refreshInterval, animationDelay } = req.body;
     

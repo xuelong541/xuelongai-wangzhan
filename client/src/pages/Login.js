@@ -58,9 +58,6 @@ const Login = () => {
           
           <div className="text-center mb-6" style={{ color: '#666' }}>
             <p>请输入您的管理员凭据</p>
-            <small style={{ background: '#f8f9fa', padding: '8px 12px', borderRadius: '6px', display: 'inline-block', marginTop: '8px' }}>
-              默认账号: admin / 密码: password
-            </small>
           </div>
 
           <form onSubmit={handleSubmit}>

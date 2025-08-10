@@ -1,0 +1,34 @@
+{
+  "name": "xuelong-ai-studio",
+  "version": "1.0.0",
+  "description": "XUELONG AI Studio - Full Stack Application",
+  "main": "server/server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm start",
+    "client": "cd client && npm start",
+    "build": "cd client && npm install && npm run build",
+    "install-deps": "cd server && npm install && cd ../client && npm install",
+    "start": "cd server && npm start",
+    "deploy": "node one-click-deploy.js",
+    "migrate-data": "node migrate-to-mongodb.js",
+    "vercel-build": "cd client && npm install && npm run build"
+  },
+  "keywords": [
+    "xuelong",
+    "ai",
+    "studio",
+    "react",
+    "express",
+    "fullstack"
+  ],
+  "author": "XUELONG AI Studio",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
