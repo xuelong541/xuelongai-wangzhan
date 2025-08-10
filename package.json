@@ -7,7 +7,7 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && npm start",
     "client": "cd client && npm start",
-    "build": "cd client && npm install && npm run build",
+    "build": "npm run vercel-build",
     "install-deps": "cd server && npm install && cd ../client && npm install",
     "start": "cd server && npm start",
     "deploy": "node one-click-deploy.js",
